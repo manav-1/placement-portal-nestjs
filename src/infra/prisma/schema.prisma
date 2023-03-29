@@ -1,0 +1,172 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                  String                @id @default(uuid())
+  email               String                @unique
+  password            String
+  name                String?
+  mobile              String?
+  role                UserRole
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  college             College?              @relation(fields: [collegeId], references: [id])
+  collegeId           String?
+  userProfile         UserProfile?
+  OpportunityUserLink OpportunityUserLink[]
+  HRContact           HRContact[]
+}
+
+model UserProfile {
+  id         String    @id @default(uuid())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String    @unique
+  firstName  String?
+  lastName   String?
+  Stream     Stream?   @relation(fields: [streamId], references: [id])
+  streamId   String?
+  marks10    Int?
+  marks12    Int?
+  marksGrad  Int?
+  marksPost  Int?
+  resumeName String?
+  resume     String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Project    Project[]
+  Links      Links[]
+}
+
+model Project {
+  id            String      @id @default(uuid())
+  name          String
+  description   String
+  url           String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  userProfile   UserProfile @relation(fields: [userProfileId], references: [id])
+  userProfileId String
+}
+
+model Opportunity {
+  id                    String                  @id @default(uuid())
+  name                  String
+  description           String
+  url                   String
+  companyImage          String
+  linkedin              String
+  jobDesc               String
+  deadline              DateTime
+  type                  OpportunityType
+  isActive              Boolean                 @default(true)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  college               College?                @relation(fields: [collegeId], references: [id])
+  collegeId             String?
+  OpportunityStreamLink OpportunityStreamLink[]
+  OpportunityUserLink   OpportunityUserLink[]
+}
+
+model OpportunityStreamLink {
+  id            String      @id @default(uuid())
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id])
+  opportunityId String
+  stream        Stream      @relation(fields: [streamId], references: [id])
+  streamId      String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OpportunityUserLink {
+  id            String      @id @default(uuid())
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id])
+  opportunityId String
+  user          User        @relation(fields: [userId], references: [id])
+  userId        String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Stream {
+  id                    String                  @id @default(uuid())
+  name                  String
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  college               College?                @relation(fields: [collegeId], references: [id])
+  collegeId             String?
+  userProfile           UserProfile[]
+  OpportunityStreamLink OpportunityStreamLink[]
+}
+
+model HRContact {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  mobile    String?
+  position  String?
+  addedBy   User     @relation(fields: [addedById], references: [id])
+  addedById String
+  company   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model College {
+  id             String           @id @default(uuid())
+  name           String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  students       User[]
+  Opportunity    Opportunity[]
+  Stream         Stream[]
+  EmailTemplates EmailTemplates[]
+}
+
+model Links {
+  id          String      @id @default(uuid())
+  name        String
+  url         String
+  type        LinkType
+  createdBy   UserProfile @relation(fields: [createdById], references: [id])
+  createdById String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model EmailTemplates {
+  id        String   @id @default(uuid())
+  name      String
+  url       String
+  collegeId String
+  college   College  @relation(fields: [collegeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  SUB_ADMIN
+  USER
+}
+
+enum OpportunityType {
+  INTERNSHIP
+  FULL_TIME
+  PART_TIME
+}
+
+enum LinkType {
+  LINKEDIN
+  GITHUB
+  WEBSITE
+  PROJECT
+  BEHANCE
+  OTHER
+}
