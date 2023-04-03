@@ -10,7 +10,6 @@ import { CollegeModule } from './modules/college/college.module';
 import { UserModule } from './modules/user/user.module';
 import { MailModule } from './infra/mail/mail.module';
 import { CollegeAdminModule } from './modules/college-admin/college-admin.module';
-import { CollegeAdminModule } from './modules/college-admin/college-admin.module';
 
 @Module({
   imports: [
