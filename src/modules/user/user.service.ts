@@ -35,4 +35,15 @@ export class UserService {
       },
     });
   }
+
+  async updateUserProfile(body: Prisma.UserProfileUncheckedUpdateInput) {
+    const user = this.helper.getToken();
+    const data = await this.prisma.userProfile.update({
+      where: {
+        userId: user.id,
+      },
+      data: body,
+    });
+    return data;
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { Helper } from '../../helper/helper.service';
-import { CollegeInput } from './entities/college.dto';
+import { CollegeInput } from './dto/college.dto';
 
 @Injectable()
 export class CollegeService {

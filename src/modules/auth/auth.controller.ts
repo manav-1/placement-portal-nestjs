@@ -2,7 +2,12 @@ import { Controller, Post, Body, Query, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'src/infra/response.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { LoginInput, RegisterInput, PropertyInput } from './entities/auth.dto';
+import {
+  LoginInput,
+  RegisterInput,
+  PropertyInput,
+  VerifyInput,
+} from './dto/auth.dto';
 import { AuthGuard } from 'src/infra/middleware/authenticate.guard';
 import { Roles } from 'src/infra/role/roles.decorator';
 
@@ -52,6 +57,16 @@ export class AuthController {
   async user() {
     try {
       return this.responseService.Success({ valid: true });
+    } catch (e) {
+      return this.responseService.Fail(e);
+    }
+  }
+
+  @Get('/verify')
+  async verify(@Query() query: VerifyInput) {
+    try {
+      const data = await this.authService.verify(query.token);
+      return this.responseService.Success(data);
     } catch (e) {
       return this.responseService.Fail(e);
     }

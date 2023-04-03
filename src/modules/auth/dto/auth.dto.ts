@@ -24,3 +24,8 @@ export class PropertyInput {
   @IsString()
   property: string;
 }
+
+export class VerifyInput {
+  @IsString()
+  token: string;
+}

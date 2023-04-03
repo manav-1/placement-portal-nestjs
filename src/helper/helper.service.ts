@@ -7,7 +7,11 @@ import { User } from '@prisma/client';
 export class Helper {
   constructor(@Inject(REQUEST) private readonly request: any) {}
 
-  createJWTSignedToken(data, key, algorithm = 'HS256') {
+  createJWTSignedToken(
+    data: any,
+    key = process.env.SECRET_KEY,
+    algorithm = 'HS256',
+  ) {
     const config = { algorithm, expiresIn: '5d' };
     return jwt.sign(data, key, config);
   }
@@ -15,13 +19,10 @@ export class Helper {
     return this.request.context.token;
   }
 
-  // functionCaller<functionType, functionParams>(
-  //   functionToBeCalled: functionType,
-  //   functionParams: functionParams,
-  // ) {
-  //   try {
-  //   } catch (e) {}
-  // }
+  verifyToken(token) {
+    const { SECRET_KEY } = process.env;
+    return jwt.verify(token, SECRET_KEY);
+  }
 }
 
 export type excludedFields = 'id' | 'createdAt' | 'updatedAt';

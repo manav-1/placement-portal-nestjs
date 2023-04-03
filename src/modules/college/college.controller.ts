@@ -3,14 +3,13 @@ import { CollegeService } from './college.service';
 import { Response } from 'src/infra/response.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/infra/middleware/authenticate.guard';
-import { CollegeInput } from './entities/college.dto';
+import { CollegeInput } from './dto/college.dto';
 import { Roles } from 'src/infra/role/roles.decorator';
 import { Role } from 'src/infra/role/roles.enum';
 
 @ApiTags('College')
 @ApiBearerAuth('access-token')
 @UseGuards(AuthGuard)
-@Roles(Role.SUPER_ADMIN)
 @Controller('college')
 export class CollegeController {
   constructor(
@@ -18,6 +17,7 @@ export class CollegeController {
     private readonly responseService: Response,
   ) {}
 
+  @Roles(Role.SUPER_ADMIN)
   @Post('/')
   async createCollege(@Body() body: CollegeInput) {
     try {
@@ -27,6 +27,8 @@ export class CollegeController {
       return this.responseService.Fail(e);
     }
   }
+
+  @Roles()
   @Get('/')
   async getAllCollege() {
     try {

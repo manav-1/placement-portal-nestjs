@@ -17,6 +17,6 @@ export class OpportunityInput
   type: OpportunityType = OpportunityType.FULL_TIME;
 }
 
-export class ApplicationInput {
+export class OpportunitySelector {
   opportunityId: string;
 }

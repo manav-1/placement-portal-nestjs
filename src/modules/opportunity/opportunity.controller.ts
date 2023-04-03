@@ -1,9 +1,17 @@
-import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { OpportunityService } from './opportunity.service';
 import { Response } from 'src/infra/response.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/infra/middleware/authenticate.guard';
-import { ApplicationInput, OpportunityInput } from './entities/opportunity.dto';
+import { OpportunitySelector, OpportunityInput } from './dto/opportunity.dto';
 import { Roles } from 'src/infra/role/roles.decorator';
 import { Role } from 'src/infra/role/roles.enum';
 
@@ -18,7 +26,7 @@ export class OpportunityController {
     private readonly responseService: Response,
   ) {}
 
-  @Get('')
+  @Get('/')
   async getOpportunity() {
     try {
       const data = await this.oppService.getAllOpportunities();
@@ -29,7 +37,7 @@ export class OpportunityController {
   }
 
   @Roles(Role.ADMIN, Role.SUB_ADMIN, Role.SUPER_ADMIN)
-  @Post('/add')
+  @Post('/')
   async addOpportunity(@Body() body: OpportunityInput) {
     try {
       const data = await this.oppService.addOpportunity(body);
@@ -41,9 +49,20 @@ export class OpportunityController {
 
   @Roles(Role.ADMIN, Role.SUB_ADMIN, Role.USER)
   @Post('/apply')
-  async applyOpportunity(@Body() body: ApplicationInput) {
+  async applyOpportunity(@Body() body: OpportunitySelector) {
     try {
       const data = await this.oppService.applyOpportunity(body);
+      return this.responseService.Success(data);
+    } catch (e) {
+      return this.responseService.Fail(e);
+    }
+  }
+
+  @Roles(Role.ADMIN, Role.SUB_ADMIN, Role.SUPER_ADMIN)
+  @Delete('/:opportunityId')
+  async deleteOpportunity(@Param() params: OpportunitySelector) {
+    try {
+      const data = await this.oppService.deleteOpportunity(params);
       return this.responseService.Success(data);
     } catch (e) {
       return this.responseService.Fail(e);

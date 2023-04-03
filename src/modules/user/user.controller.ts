@@ -5,7 +5,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/infra/middleware/authenticate.guard';
 import { Roles } from 'src/infra/role/roles.decorator';
 import { Role } from 'src/infra/role/roles.enum';
-import { Helper } from 'src/helper/helper.service';
+import { Prisma } from '@prisma/client';
 
 @ApiTags('User')
 @ApiBearerAuth('access-token')
@@ -18,13 +18,8 @@ export class UserController {
     private readonly responseService: Response,
   ) {}
 
-  @Get()
-  async abc() {
-    return 'Hello World';
-  }
-
   @Roles(Role.ADMIN, Role.SUB_ADMIN, Role.SUPER_ADMIN)
-  @Get('/all')
+  @Get('/college')
   async getAllUsersFromCollege() {
     try {
       const data = await this.userService.getAllUsersFromCollege();
@@ -38,6 +33,18 @@ export class UserController {
   async getUserProfile() {
     try {
       const data = await this.userService.getUserProfile();
+      return this.responseService.Success(data);
+    } catch (e) {
+      return this.responseService.Fail(e);
+    }
+  }
+
+  @Post('/profile')
+  async updateUserProfile(
+    @Body() body: Prisma.UserProfileUncheckedUpdateInput,
+  ) {
+    try {
+      const data = await this.userService.updateUserProfile(body);
       return this.responseService.Success(data);
     } catch (e) {
       return this.responseService.Fail(e);

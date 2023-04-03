@@ -18,6 +18,8 @@ model User {
   updatedAt           DateTime              @updatedAt
   college             College?              @relation(fields: [collegeId], references: [id])
   collegeId           String?
+  isActive            Boolean               @default(true)
+  isEmailVerified     Boolean               @default(false)
   userProfile         UserProfile?
   OpportunityUserLink OpportunityUserLink[]
   HRContact           HRContact[]
@@ -71,6 +73,8 @@ model Opportunity {
   collegeId             String?
   OpportunityStreamLink OpportunityStreamLink[]
   OpportunityUserLink   OpportunityUserLink[]
+
+  @@unique([id, collegeId])
 }
 
 model OpportunityStreamLink {
