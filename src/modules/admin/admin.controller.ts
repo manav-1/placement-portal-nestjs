@@ -3,15 +3,18 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { CollegeAdminService } from './college-admin.service';
-import { CreateCollegeAdminDto } from './dto/create-college-admin.dto';
-import { UpdateCollegeAdminDto } from './dto/update-college-admin.dto';
-
-@Controller('college-admin')
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/infra/middleware/authenticate.guard';
+import { CollegeAdminService } from './admin.service';
+import { CreateCollegeAdminDto } from './dto/admin.dto';
+@ApiTags('College Admin')
+@ApiBearerAuth('access-token')
+@UseGuards(AuthGuard)
+@Controller('admin')
 export class CollegeAdminController {
   constructor(private readonly collegeAdminService: CollegeAdminService) {}
 
@@ -28,14 +31,6 @@ export class CollegeAdminController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.collegeAdminService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCollegeAdminDto: UpdateCollegeAdminDto,
-  ) {
-    return this.collegeAdminService.update(+id, updateCollegeAdminDto);
   }
 
   @Delete(':id')

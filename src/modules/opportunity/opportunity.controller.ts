@@ -41,6 +41,7 @@ export class OpportunityController {
   async addOpportunity(@Body() body: OpportunityInput) {
     try {
       const data = await this.oppService.addOpportunity(body);
+      console.log(data);
       return this.responseService.Success(data);
     } catch (e) {
       return this.responseService.Fail(e);

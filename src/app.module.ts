@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
@@ -9,13 +8,11 @@ import { RequestId } from './infra/middleware/request-id.middleware';
 import { CollegeModule } from './modules/college/college.module';
 import { UserModule } from './modules/user/user.module';
 import { MailModule } from './infra/mail/mail.module';
-import { CollegeAdminModule } from './modules/college-admin/college-admin.module';
+import { CollegeAdminModule } from './modules/admin/admin.module';
 
+console.log(process.env);
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
-    }),
     AuthModule,
     OpportunityModule,
     CollegeModule,
