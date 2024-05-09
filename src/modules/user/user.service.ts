@@ -5,7 +5,10 @@ import { Helper } from '../../helper/helper.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private helper: Helper) {}
+  constructor(
+    private prisma: PrismaService,
+    private helper: Helper,
+  ) {}
 
   async getAllUsersFromCollege() {
     const user = this.helper.getToken();
@@ -17,7 +20,7 @@ export class UserService {
         id: true,
         email: true,
         name: true,
-        role: true,
+        userRole: true,
         collegeId: true,
         userProfile: {
           select: {

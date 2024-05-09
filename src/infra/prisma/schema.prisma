@@ -13,16 +13,16 @@ model User {
   password            String
   name                String?
   mobile              String?
-  role                UserRole
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
-  college             College?              @relation(fields: [collegeId], references: [id])
   collegeId           String?
   isActive            Boolean               @default(true)
   isEmailVerified     Boolean               @default(false)
   userProfile         UserProfile?
   OpportunityUserLink OpportunityUserLink[]
   HRContact           HRContact[]
+  userRole            UserRole              @default(USER)
+  college             College?              @relation(fields: [collegeId], references: [id])
 }
 
 model UserProfile {

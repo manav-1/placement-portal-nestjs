@@ -10,7 +10,6 @@ import { UserModule } from './modules/user/user.module';
 import { MailModule } from './infra/mail/mail.module';
 import { CollegeAdminModule } from './modules/admin/admin.module';
 
-console.log(process.env);
 @Module({
   imports: [
     AuthModule,

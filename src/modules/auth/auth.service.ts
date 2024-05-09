@@ -13,12 +13,17 @@ import { LoginInput, PropertyInput } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private helper: Helper) {}
+  constructor(
+    private prisma: PrismaService,
+    private helper: Helper,
+  ) {}
   async login(body: LoginInput) {
     try {
       const { email, password } = body;
       const userClause: Prisma.UserWhereUniqueInput = { email };
-      const user = await this.prisma.user.findUnique({ where: userClause });
+      const user = await this.prisma.user.findUnique({
+        where: userClause,
+      });
       if (!user) {
         throw new UnauthorizedException('User not found');
       }
@@ -26,9 +31,13 @@ export class AuthService {
       if (!isPasswordValid) {
         throw new UnauthorizedException('Password is invalid');
       }
-      delete user.password;
-      const token = this.helper.createJWTSignedToken(user);
-      return { data: user, token };
+
+      const userWithoutPass = this.helper.excludeSensitiveFields(user, [
+        'password',
+      ]);
+
+      const token = this.helper.createJWTSignedToken(userWithoutPass);
+      return { data: userWithoutPass, token };
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException();

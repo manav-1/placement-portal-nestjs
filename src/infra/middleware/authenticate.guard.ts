@@ -2,7 +2,6 @@ import * as jwt from 'jsonwebtoken';
 // import * as httpContext from 'express-http-context';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../role/roles.decorator';
 import { Role } from '../role/roles.enum';
@@ -11,9 +10,7 @@ import { Role } from '../role/roles.enum';
 export class AuthGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [

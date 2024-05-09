@@ -15,7 +15,7 @@ async function seed() {
       email,
       password: hashedPassword,
       name: 'Manav',
-      role: 'SUPER_ADMIN',
+      userRole: 'SUPER_ADMIN',
       mobile: '8745007937',
     },
   });
